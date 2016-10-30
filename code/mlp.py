@@ -8,13 +8,8 @@ from utils import *
 from autograd import *
 
 np.random.seed(0)
-EPS = 1e-4
 
-def glorot(m,n):
-    #TODO return scale for glorot initialization
-    pass
-
-class MLP(Network):
+class MLP(object):
     """
     Multilayer Perceptron
     Accepts list of layer sizes [in_size, hid_size1, hid_size2, ..., out_size]
@@ -22,8 +17,10 @@ class MLP(Network):
     def __init__(self, layer_sizes):
         self.graph = self._build() # DO NOT REMOVE THIS LINE. Store the output of xman.setup() in this variable
 
-        #TODO add other instance variables here.
-
+    def _build(self):
+        x = XMan()
+        #TODO define your model here
+        return x.setup()
 
 def main(params):
     epochs = params['epochs']
@@ -55,24 +52,17 @@ def main(params):
     # train
     print "training..."
     value_dict = mlp.graph.inputDict()
-    min_loss = 1e5
     lr = init_lr
     for i in range(epochs):
         for (idxs,e,l) in mb_train:
             #TODO prepare the input and do a fwd-bckwd pass over it and update the weights
-            pass
         # validate
-        tot_loss, n= 0., 0
-        probs = []
-        targets = []
         for (idxs,e,l) in mb_valid:
             #TODO prepare the input and do a fwd pass over it to compute the loss
-            pass
     print "done"
 
     for (idxs,e,l) in mb_test:
         # prepare input and do a fwd pass over it to compute the output probs
-        pass
         
     #np.save(output_file, ouput_probabilities)
 
