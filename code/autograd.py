@@ -27,7 +27,7 @@ class Autograd(object):
         needed for the gradient (indexed by register name), as
         returned by eval.
         """
-        for (dstName,funName,inputNames) in self.optimizeForBProp(opseq):
+        for (dstName,funName,inputNames) in list(reversed(opseq)):
             delta = deltaDict[dstName]
             if TRACE_BP: print 'bprop [',delta,']',dstName,'=',funName,inputNames
             # values will be extended to include the next-level delta
@@ -45,18 +45,3 @@ class Autograd(object):
     def _incrementBy(self, dict, key, inc):
         if key not in dict: dict[key] = inc
         else: dict[key] = dict[key] + inc
-
-    def optimizeForBProp(self,opseq):
-        """ Optimize an operation sequence for backprop.  Currently, reverse
-        it and replace any occurence of "z=crossEnt(a,b), ...,
-        a=softMax(c)" with with "z=crossEnt-softMax(c,b)"
-        """
-        opseq = list(reversed(opseq))
-        # find where z = f(...) appears
-        def find(dst=None,fun=None):
-            def match(actual,target): return target==None or actual==target
-            for k,(dstName,funName,inputNames) in enumerate(opseq):
-                if match(dstName,dst) and match(funName,fun):
-                    return k
-            return -1
-        return opseq
