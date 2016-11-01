@@ -59,20 +59,4 @@ class Autograd(object):
                 if match(dstName,dst) and match(funName,fun):
                     return k
             return -1
-        # look for places to optimize
-        crossEntOptimizations = []
-        for k,(dstName,funName,inputNames) in enumerate(opseq):
-            # look for z=crossEnt(softMax(p), y) where y is an input or param
-            if funName=='crossEnt':
-                (a,b) = inputNames; ka = find(dst=a); kb = find(dst=b)
-                if ka>=0 and kb<0 and opseq[ka][1]=='softMax':
-                    crossEntOptimizations.append((k,ka))
-        # perform the optimization, by splicing out operation index ka
-        # and replacing operation k with a single crossEnt-softMax
-        # operation
-        for (k,ka) in crossEntOptimizations:
-            z = opseq[k][0]
-            b = opseq[k][2][1]
-            c = opseq[ka][2][0]
-            opseq = opseq[:k] + [(z,'crossEnt-softMax',(c,b))] + opseq[k+1:ka]+opseq[ka+1:]
         return opseq
