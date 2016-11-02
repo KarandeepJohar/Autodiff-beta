@@ -28,11 +28,6 @@ EVAL_FUNS = {
 # was computed by autograd.eval in the eval stage.  dfi will return
 # delta * df/dxi [f(x1,...,xk)]
 # 
-# note: I don't have derivatives for crossEnt and softMax, instead we
-# will look for patterns of the form "z = crossEnt(softMax(x), y)" and
-# replace them with "z = crossEnt-softMax(x,y)", which we DO have a
-# derivative defined for.  
-
 
 def _derivAdd(delta,x1):
     if delta.shape!=x1.shape:
