@@ -44,7 +44,7 @@ class DataPreprocessor:
             train_set |= set(list(entity))
             label_set |= set(label.split(','))
 
-        fvalid = io.open(train_file, 'r')
+        fvalid = io.open(validation_file, 'r')
         for line in fvalid:
             entity, label = map(clean, line.rstrip().split('\t')[:2])
             valid_set |= set(list(entity))
