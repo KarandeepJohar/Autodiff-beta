@@ -15,7 +15,7 @@ class MLP(object):
     Accepts list of layer sizes [in_size, hid_size1, hid_size2, ..., out_size]
     """
     def __init__(self, layer_sizes):
-        self.graph = self._build() # DO NOT REMOVE THIS LINE. Store the output of xman.setup() in this variable
+        self.my_xman = self._build() # DO NOT REMOVE THIS LINE. Store the output of xman.setup() in this variable
 
     def _build(self):
         x = XMan()
@@ -51,7 +51,7 @@ def main(params):
 
     # train
     print "training..."
-    value_dict = mlp.graph.inputDict()
+    value_dict = mlp.my_xman.inputDict()
     lr = init_lr
     for i in range(epochs):
         for (idxs,e,l) in mb_train:

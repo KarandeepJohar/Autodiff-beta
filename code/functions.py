@@ -33,6 +33,15 @@ EVAL_FUNS = {
 # replace them with "z = crossEnt-softMax(x,y)", which we DO have a
 # derivative defined for.  
 
+
+def _derivAdd(delta,x1):
+    if delta.shape!=x1.shape:
+        # broadcast, sum along axis=0
+        if delta.shape[1]!=x1.shape[0]:
+            raise ValueError("Dimension Mismatch")
+        return delta.sum(axis=0) #we sum the gradients over the batch
+    else: return delta
+
 BP_FUNS = {
     'add':              [lambda delta,out,x1,x2: _derivAdd(delta,x1),    lambda delta,out,x1,x2: _derivAdd(delta,x2)],
     'subtract':         [lambda delta,out,x1,x2: _derivAdd(delta,x1),    lambda delta,out,x1,x2: -_derivAdd(delta,x2)],
