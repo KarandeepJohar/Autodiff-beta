@@ -16,7 +16,7 @@ class LSTM(object):
     Accepts maximum length of sequence, input size, number of hidden units and output size
     """
     def __init__(self, max_len, in_size, num_hid, out_size):
-        self.graph = self._build() #DO NOT REMOVE THIS LINE. Store the output of xman.setup() in this variable
+        self.my_xman= self._build() #DO NOT REMOVE THIS LINE. Store the output of xman.setup() in this variable
 
     def _build(self):
         x = XMan()
@@ -42,13 +42,13 @@ def main(params):
     mb_test = MinibatchLoader(data.test, batch_size, max_len, 
            len(data.chardict), len(data.labeldict))
     # build
-    # build
     print "building lstm..."
     #TODO INITIALIZE LSTM HERE
 
     # train
     print "training..."
-    value_dict = lstm.graph.inputDict()
+    # get default data and params
+    value_dict = lstm.my_xman.inputDict()
     lr = init_lr
     for i in range(epochs):
         for (idxs,e,l) in mb_train:

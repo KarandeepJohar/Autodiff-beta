@@ -51,6 +51,7 @@ def main(params):
 
     # train
     print "training..."
+    # get default data and params
     value_dict = mlp.my_xman.inputDict()
     lr = init_lr
     for i in range(epochs):
