@@ -10,6 +10,7 @@ class f(XManFunctions):
     @staticmethod
     def square(a):
         return XManFunctions.registerDefinedByOperator('square',a)
+    # TODO add other operation registers
 
 # the functions that autograd.eval will use to evaluate each function,
 # to be called with the functions actual inputs as arguments
@@ -18,6 +19,9 @@ EVAL_FUNS = {
     'add':      lambda x1,x2: x1+x2,
     'subtract': lambda x1,x2: x1-x2,
     'square':   np.square,
+    'crossEnt': # TODO
+    'softMax':  # TODO
+    # TODO other operations
     }
 
 # the functions that autograd.bprop will use in reverse mode
@@ -28,6 +32,10 @@ EVAL_FUNS = {
 # was computed by autograd.eval in the eval stage.  dfi will return
 # delta * df/dxi [f(x1,...,xk)]
 # 
+# NOTE: Autograd has an optimization where if it finds a softMax op
+# followed by crossEnt op, it combines the backward pass for both. So
+# you only need to implement the BP_FUNS for the combined operation 
+# crossEnt-softMax below.
 
 def _derivAdd(delta,x1):
     if delta.shape!=x1.shape:
@@ -41,4 +49,6 @@ BP_FUNS = {
     'add':              [lambda delta,out,x1,x2: _derivAdd(delta,x1),    lambda delta,out,x1,x2: _derivAdd(delta,x2)],
     'subtract':         [lambda delta,out,x1,x2: _derivAdd(delta,x1),    lambda delta,out,x1,x2: -_derivAdd(delta,x2)],
     'square':           [lambda delta,out,x : delta * 2.0 * x],
+    'crossEnt-softMax': # TODO
+    # TODO other operations
     }

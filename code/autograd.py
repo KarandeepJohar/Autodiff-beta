@@ -27,7 +27,7 @@ class Autograd(object):
         needed for the gradient (indexed by register name), as
         returned by eval.
         """
-        for (dstName,funName,inputNames) in list(reversed(opseq)):
+        for (dstName,funName,inputNames) in self.optimizeForBProp(opseq):
             delta = deltaDict[dstName]
             if TRACE_BP: print 'bprop [',delta,']',dstName,'=',funName,inputNames
             # values will be extended to include the next-level delta
@@ -45,3 +45,34 @@ class Autograd(object):
     def _incrementBy(self, dict, key, inc):
         if key not in dict: dict[key] = inc
         else: dict[key] = dict[key] + inc
+
+    def optimizeForBProp(self,opseq):
+        """ Optimize an operation sequence for backprop.  Currently, reverse
+        it and replace any occurence of "z=crossEnt(a,b), ...,
+        a=softMax(c)" with with "z=crossEnt-softMax(c,b)"
+        """
+        opseq = list(reversed(opseq))
+        # find where z = f(...) appears
+        def find(dst=None,fun=None):
+            def match(actual,target): return target==None or actual==target
+            for k,(dstName,funName,inputNames) in enumerate(opseq):
+                if match(dstName,dst) and match(funName,fun):
+                    return k
+            return -1
+        # look for places to optimize
+        crossEntOptimizations = []
+        for k,(dstName,funName,inputNames) in enumerate(opseq):
+            # look for z=crossEnt(softMax(p), y) where y is an input or param
+            if funName=='crossEnt':
+                (a,b) = inputNames; ka = find(dst=a); kb = find(dst=b)
+                if ka>=0 and kb<0 and opseq[ka][1]=='softMax':
+                    crossEntOptimizations.append((k,ka))
+        # perform the optimization, by splicing out operation index ka
+        # and replacing operation k with a single crossEnt-softMax
+        # operation
+        for (k,ka) in crossEntOptimizations:
+            z = opseq[k][0]
+            b = opseq[k][2][1]
+            c = opseq[ka][2][0]
+            opseq = opseq[:k] + [(z,'crossEnt-softMax',(c,b))] + opseq[k+1:ka]+opseq[ka+1:]
+        return opseq
