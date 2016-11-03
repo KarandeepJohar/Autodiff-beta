@@ -30,6 +30,7 @@ def main(params):
     batch_size = params['batch_size']
     dataset = params['dataset']
     init_lr = params['init_lr']
+    output_file = params['output_file']
 
     # load data and preprocess
     dp = DataPreprocessor()
@@ -54,15 +55,22 @@ def main(params):
     for i in range(epochs):
         for (idxs,e,l) in mb_train:
             #TODO prepare the input and do a fwd-bckwd pass over it and update the weights
+
         # validate
         for (idxs,e,l) in mb_valid:
             #TODO prepare the input and do a fwd pass over it to compute the loss
+
+        #TODO compare current validation loss to minimum validation loss
+        # and store params if needed
     print "done"
 
     for (idxs,e,l) in mb_test:
         # prepare input and do a fwd pass over it to compute the output probs
         
+    #TODO save probabilities on test set
+    # ensure that these are in the same order as the test input
     #np.save(output_file, ouput_probabilities)
+
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--max_len', dest='max_len', type=int, default=10)
