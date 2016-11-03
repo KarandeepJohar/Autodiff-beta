@@ -33,7 +33,7 @@ def main(params):
 
     # load data and preprocess
     dp = DataPreprocessor()
-    data = dp.preprocess('../data/%s.train'%dataset, '../data/%s.valid'%dataset, '../data/%s.test'%dataset)
+    data = dp.preprocess('%s.train'%dataset, '%s.valid'%dataset, '%s.test'%dataset)
     # minibatches
     mb_train = MinibatchLoader(data.training, batch_size, max_len, 
            len(data.chardict), len(data.labeldict))
@@ -67,7 +67,7 @@ if __name__=='__main__':
     parser.add_argument('--max_len', dest='max_len', type=int, default=10)
     parser.add_argument('--num_hid', dest='num_hid', type=int, default=50)
     parser.add_argument('--batch_size', dest='batch_size', type=int, default=16)
-    parser.add_argument('--dataset', dest='dataset', type=str, default='smaller')
+    parser.add_argument('--dataset', dest='dataset', type=str, default='tiny')
     parser.add_argument('--epochs', dest='epochs', type=int, default=20)
     parser.add_argument('--init_lr', dest='init_lr', type=float, default=0.5)
     parser.add_argument('--output_file', dest='output_file', type=str, default='output')
