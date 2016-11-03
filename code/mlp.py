@@ -37,14 +37,15 @@ def main(params):
     # minibatches
     mb_train = MinibatchLoader(data.training, batch_size, max_len, 
            len(data.chardict), len(data.labeldict))
-    mb_valid = MinibatchLoader(data.validation, batch_size, max_len, 
-           len(data.chardict), len(data.labeldict))
-    mb_test = MinibatchLoader(data.test, batch_size, max_len, 
-           len(data.chardict), len(data.labeldict))
+    mb_valid = MinibatchLoader(data.validation, len(data.validation), max_len, 
+           len(data.chardict), len(data.labeldict), shuffle=False)
+    mb_test = MinibatchLoader(data.test, len(data.test), max_len, 
+           len(data.chardict), len(data.labeldict), shuffle=False)
 
     # build
     print "building mlp..."
-    #TODO INITIALIZE MLP HERE
+    mlp = MLP([max_len*mb_train.num_chars,num_hid,mb_train.num_labels])
+    #TODO CHECK GRADIENTS HERE
 
 
     print "done"
@@ -74,7 +75,7 @@ if __name__=='__main__':
     parser.add_argument('--batch_size', dest='batch_size', type=int, default=16)
     parser.add_argument('--dataset', dest='dataset', type=str, default='tiny')
     parser.add_argument('--epochs', dest='epochs', type=int, default=20)
-    parser.add_argument('--init_lr', dest='init_lr', type=float, default=0.5)
+    parser.add_argument('--init_lr', dest='init_lr', type=float, default=0.05)
     parser.add_argument('--output_file', dest='output_file', type=str, default='output')
     params = vars(parser.parse_args())
     main(params)

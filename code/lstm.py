@@ -37,13 +37,14 @@ def main(params):
     # minibatches
     mb_train = MinibatchLoader(data.training, batch_size, max_len, 
            len(data.chardict), len(data.labeldict))
-    mb_valid = MinibatchLoader(data.validation, batch_size, max_len, 
-           len(data.chardict), len(data.labeldict))
-    mb_test = MinibatchLoader(data.test, batch_size, max_len, 
-           len(data.chardict), len(data.labeldict))
+    mb_valid = MinibatchLoader(data.validation, len(data.validation), max_len, 
+           len(data.chardict), len(data.labeldict), shuffle=False)
+    mb_test = MinibatchLoader(data.test, len(data.test), max_len, 
+           len(data.chardict), len(data.labeldict), shuffle=False)
     # build
     print "building lstm..."
-    #TODO INITIALIZE LSTM HERE
+    lstm = LSTM(max_len,mb_train.num_chars,num_hid,mb_train.num_labels)
+    #TODO CHECK GRADIENTS HERE
 
     # train
     print "training..."

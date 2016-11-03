@@ -91,13 +91,14 @@ class DataPreprocessor:
         return examples
 
 class MinibatchLoader:
-    def __init__(self, examples, batch_size, max_len, num_chars, num_labels):
+    def __init__(self, examples, batch_size, max_len, num_chars, num_labels, shuffle=True):
         self.batch_size = batch_size
         self.max_len = max_len
         self.examples = examples
         self.num_examples = len(examples)
         self.num_labels = num_labels
         self.num_chars = num_chars
+        self.shuffle = shuffle
         self.reset()
 
     def __iter__(self):
@@ -106,7 +107,8 @@ class MinibatchLoader:
 
     def reset(self):
         """ next epoch """
-        self.permutation = np.random.permutation(self.num_examples)
+        if self.shuffle: self.permutation = np.random.permutation(self.num_examples)
+        else: self.permutation = np.arange(self.num_examples)
         self.ptr = 0
 
     def next(self):
